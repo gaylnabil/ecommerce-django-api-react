@@ -1,0 +1,54 @@
+import json
+from products.models import Product
+from django.forms.models import model_to_dict
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from products.serializers import ProductSerializer
+# Create your views here.
+
+
+# using '@api_view' decorator
+@api_view(['GET'])
+def get_products(request, *arg, **kwargs):
+    """
+    Django REST Framework API
+    GET /products
+    """
+    # data = request.data if request.data else {}
+    # return Response(data)
+    if instance := Product.objects.all().order_by('?').first():
+        data = ProductSerializer(instance).data
+    else:
+        data = {}
+    return Response(data)
+
+
+@api_view(['POST'])
+def add_products(request, *arg, **kwargs):
+    """
+    Django REST Framework API
+    POST /products
+    """
+    serializer = ProductSerializer(data=request.data)
+    data = serializer.data if serializer.is_valid(raise_exception=True) else {}
+    return Response(data)
+
+
+# *************************************
+# def api_home(request, *arg, **kwargs):
+
+#     data = {}
+#     body = request.body  # byte string of JSON data
+#     try:
+#         # convert byte string of JSON data(body) into Python Dict
+#         data = json.loads(body)
+#     except Exception as e:
+#         raise e
+
+#     print("Data: ", data)
+#     # print("Request: ", body.decode("utf-8"))
+#     # print("Request: ", dir(request))
+#     print('request.headers: ', dict(request.headers))
+#     data['headers'] = dict(request.headers)
+#     data['content_type'] = request.content_type
+#     return JsonResponse(data)

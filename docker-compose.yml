@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - .:/ecommerce_django_api_react
+    container_name: ecommerce_django_api_react-c
+    image: ecommerce_django_api_react-img
+    ports:
+      - 3000:3000
+    command: npm start
+    environment:
+      - WACTHPACK_POLLING=true
