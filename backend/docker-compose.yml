@@ -5,9 +5,9 @@ services:
     build:
       context: .
     volumes:
-      - .:/ecommerce_django_api_react
-    container_name: ecommerce_django_api_react-c
-    image: ecommerce_django_api_react-img
+      - .:/ecommerce_django_API
+    container_name: ecommerce_django_API-c
+    image: ecommerce_django_API-img
     ports:
       - 3000:3000
     command: npm start
