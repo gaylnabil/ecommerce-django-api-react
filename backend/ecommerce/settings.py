@@ -29,7 +29,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', str)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
+# ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # Application definition
@@ -88,6 +89,7 @@ DATABASES = {
         'NAME': os.environ.get('DATABASE_NAME'),
         'USER': os.environ.get('USERNAME'),
         'PASSWORD': os.environ.get('PASSWORD'),
+        # service name: set in docker-compose.yml
         'HOST': os.environ.get('HOST'),
         'PORT': os.environ.get('PORT', int),
     }
