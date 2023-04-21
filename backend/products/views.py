@@ -6,17 +6,36 @@ from rest_framework.decorators import api_view
 # from django.http import Http4
 from django.shortcuts import get_object_or_404
 
-# Using generics API View
+# Costume Staff Permissions
+from products.permissions import IsStaffEditorPermission
 
 
+# Using generics API View.
 class ProductListCreateView(generics.ListCreateAPIView):
+    """
+    A view that provides both list and create functionality for Products.
+
+    """
     queryset = Product.objects.all()
+    # The serializer class to use for Product objects.
     serializer_class = ProductSerializer
+    #  used by this view. In this case, it uses SessionAuthentication which requires
+    #  clients to authenticate using Django sessions.
     authentication_classes = [authentication.SessionAuthentication]
-    permission_classes = [permissions.DjangoModelPermissions]
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    # In this case, it uses DjangoModelPermissions which grants permissions based on the model's default permissions,
+    # such as add, change or delete. Alternatively, IsAuthenticatedOrReadOnly can be used instead if you want to allow
+    # unauthenticated users read-only access while requiring authenticated users have full CRUD capabilities.
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
+    # permission_classes = [permissions.IsAuthenticated, IsStaffEditorPermission]
 
     def perform_create(self, serializer):
+        """
+        Overrides the default behavior when creating a new object via POST request. 
+        It sets the description field of newly created product equal to its title 
+        if no description is provided.
+
+        """
         print("perform_create: ", serializer.validated_data)
         title = serializer.validated_data.get('title')
         description = serializer.validated_data.get('description') or None
