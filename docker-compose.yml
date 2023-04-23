@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+
+  frontend:
+    build:
+      context: frontend/.
+    volumes:
+      - ./frontend:/react_frontend
+    container_name: react_frontend-c
+    image: react_frontend-img
+    ports:
+      - 3000:3000
+    command: npm start
+    environment:
+      - WACTHPACK_POLLING=true
+  backend:
+    build:
+      context: backend/.
+    volumes:
+      - ./backend:/ecommerce_django_api
+    container_name: ecommerce_django_api-c
+    image: ecommerce_django_api-img
+    ports:
+      - 8000:8000
+    command: python3 manage.py runserver 0.0.0.0:8000
+    environment:
+      - WACTHPACK_POLLING=true
+    depends_on:
+      - db
+  db:
+    image: postgres
+    container_name: nga-postgres
+    volumes:
+      - ./backend/data/db:/var/lib/postgresql/data
+    ports:
+        - 5432:5432
+    environment:
+      - POSTGRES_DB=ecommerce
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    # env_file: .env

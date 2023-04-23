@@ -11,7 +11,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # RUN mkdir -p $DockerHOME 
 
 # Working directory 
-WORKDIR ./ecommerce_django_api
+WORKDIR /ecommerce_django_api
 
 # install dependencies  
 RUN pip install --upgrade pip 
