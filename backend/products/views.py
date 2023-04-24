@@ -1,5 +1,4 @@
-from rest_framework import generics, mixins, permissions, authentication
-from products.models import Product
+from rest_framework import generics, mixins, authentication
 from products.serializers import ProductSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -7,13 +6,16 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 
 # Costume Staff Permissions
-from products.permissions import IsStaffEditorPermission
-
+from api.mixins import StaffEditorPermissionMixin
 from api.authentication import EcommerceTokenAuthentication
+from .models import Product
+
+
 # Using generics API View.
-
-
-class ProductListCreateView(generics.ListCreateAPIView):
+class ProductListCreateView(
+    StaffEditorPermissionMixin,
+    generics.ListCreateAPIView,
+):
     """
     A view that provides both list and create functionality for Products.
 
@@ -23,16 +25,8 @@ class ProductListCreateView(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
     #  used by this view. In this case, it uses SessionAuthentication which requires
     #  clients to authenticate using Django sessions.
-    # authentication_classes = [
-    #     authentication.SessionAuthentication, authentication.TokenAuthentication]
     authentication_classes = [
         authentication.SessionAuthentication, EcommerceTokenAuthentication]
-
-    # In this case, it uses DjangoModelPermissions which grants permissions based on the model's default permissions,
-    # such as add, change or delete. Alternatively, IsAuthenticatedOrReadOnly can be used instead if you want to allow
-    # unauthenticated users read-only access while requiring authenticated users have full CRUD capabilities.
-    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
-    # permission_classes = [permissions.IsAuthenticated, IsStaffEditorPermission]
 
     def perform_create(self, serializer):
         """
@@ -55,7 +49,10 @@ class ProductListCreateView(generics.ListCreateAPIView):
 product_list_create_view = ProductListCreateView.as_view()
 
 
-class ProductDetailAPIView(generics.RetrieveAPIView):
+class ProductDetailAPIView(
+    generics.RetrieveAPIView,
+    StaffEditorPermissionMixin
+):
     """
     A view that retrieves a single product instance by its ID.
 
@@ -73,19 +70,22 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+
     # ProductDetailAPIView means getting only single Product
     # lookup_field= 'pk'
 product_detail_view = ProductDetailAPIView.as_view()
 
 
-class ProductUpdateAPIView(generics.UpdateAPIView):
+class ProductUpdateAPIView(
+    generics.UpdateAPIView,
+    StaffEditorPermissionMixin
+):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     # ProductDetailAPIView means getting only single Product
     lookup_field = 'pk'
 
     authentication_classes = [authentication.SessionAuthentication]
-    permission_classes = [permissions.DjangoModelPermissions]
 
     def perform_update(self, serializer):
         print("perform_update: ", serializer.validated_data)
@@ -99,7 +99,10 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
 product_update_view = ProductUpdateAPIView.as_view()
 
 
-class ProductDestroyAPIView(generics.DestroyAPIView):
+class ProductDestroyAPIView(
+    generics.DestroyAPIView,
+    StaffEditorPermissionMixin
+):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     # ProductDetailAPIView means getting only single Product
@@ -109,8 +112,6 @@ class ProductDestroyAPIView(generics.DestroyAPIView):
         authentication.SessionAuthentication,
         EcommerceTokenAuthentication
     ]
-
-    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
     def perform_destroy(self, instance):
         print("perform_destroy: ", instance)

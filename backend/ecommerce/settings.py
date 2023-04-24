@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'ecommerce.urls'
 
 TEMPLATES = [
@@ -145,3 +146,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+auth_classes = [
+    'rest_framework. authentication.SessionAuthentication'
+    'api.authentication.EcommerceTokenAuthentication'
+]
+
+if DEBUG:
+    auth_classes = [
+        'api.authentication.EcommerceTokenAuthentication'
+    ]
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': auth_classes,
+    'DEFAULT_PERMISSION_CLASSES': [
+        # GET /products : for everyone
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+}
