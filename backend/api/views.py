@@ -9,7 +9,7 @@ from products.serializers import ProductSerializer
 
 # using '@api_view' decorator
 @api_view(['GET'])
-def get_products(request, *arg, **kwargs):
+def api_home(request, *arg, **kwargs):
     """
     Django REST Framework API
     GET /products

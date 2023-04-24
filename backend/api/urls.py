@@ -7,7 +7,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('auth/', obtain_auth_token),
-    path('', views.get_products, name='get_products'),
+    path('', views.api_home, name='api_home'),
     path('products/', include('products.urls')),
     # path('products', views.add_products, name='add_products'),
 
