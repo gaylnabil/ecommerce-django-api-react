@@ -9,8 +9,10 @@ from django.shortcuts import get_object_or_404
 # Costume Staff Permissions
 from products.permissions import IsStaffEditorPermission
 
-
+from api.authentication import EcommerceTokenAuthentication
 # Using generics API View.
+
+
 class ProductListCreateView(generics.ListCreateAPIView):
     """
     A view that provides both list and create functionality for Products.
@@ -21,7 +23,10 @@ class ProductListCreateView(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
     #  used by this view. In this case, it uses SessionAuthentication which requires
     #  clients to authenticate using Django sessions.
-    authentication_classes = [authentication.SessionAuthentication]
+    # authentication_classes = [
+    #     authentication.SessionAuthentication, authentication.TokenAuthentication]
+    authentication_classes = [
+        authentication.SessionAuthentication, EcommerceTokenAuthentication]
 
     # In this case, it uses DjangoModelPermissions which grants permissions based on the model's default permissions,
     # such as add, change or delete. Alternatively, IsAuthenticatedOrReadOnly can be used instead if you want to allow
@@ -68,7 +73,6 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-
     # ProductDetailAPIView means getting only single Product
     # lookup_field= 'pk'
 product_detail_view = ProductDetailAPIView.as_view()
@@ -100,6 +104,13 @@ class ProductDestroyAPIView(generics.DestroyAPIView):
     serializer_class = ProductSerializer
     # ProductDetailAPIView means getting only single Product
     lookup_field = 'pk'
+
+    authentication_classes = [
+        authentication.SessionAuthentication,
+        EcommerceTokenAuthentication
+    ]
+
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
     def perform_destroy(self, instance):
         print("perform_destroy: ", instance)
