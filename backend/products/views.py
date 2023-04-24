@@ -10,7 +10,7 @@ from api.mixins import StaffEditorPermissionMixin
 from api.authentication import EcommerceTokenAuthentication
 from .models import Product
 
-
+from api.authentication import EcommerceTokenAuthentication
 # Using generics API View.
 class ProductListCreateView(
     StaffEditorPermissionMixin,
@@ -27,7 +27,6 @@ class ProductListCreateView(
     #  clients to authenticate using Django sessions.
     authentication_classes = [
         authentication.SessionAuthentication, EcommerceTokenAuthentication]
-
     def perform_create(self, serializer):
         """
         Overrides the default behavior when creating a new object via POST request. 
@@ -70,7 +69,6 @@ class ProductDetailAPIView(
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-
     # ProductDetailAPIView means getting only single Product
     # lookup_field= 'pk'
 product_detail_view = ProductDetailAPIView.as_view()
@@ -112,7 +110,6 @@ class ProductDestroyAPIView(
         authentication.SessionAuthentication,
         EcommerceTokenAuthentication
     ]
-
     def perform_destroy(self, instance):
         print("perform_destroy: ", instance)
         return super().perform_destroy(instance)
