@@ -17,7 +17,14 @@ def api_home(request, *arg, **kwargs):
     # data = request.data if request.data else {}
     # return Response(data)
     if instance := Product.objects.all().order_by('?').first():
-        data = ProductSerializer(instance).data
+        # must be add 'serializer_context' to ProductSerializer
+        # for serializers.HyperlinkedIdentityField
+        serializer_context = {
+            'request': request,
+        }
+
+        data = ProductSerializer(
+            instance=instance, context=serializer_context).data
     else:
         data = {}
     return Response(data)
@@ -29,7 +36,11 @@ def add_products(request, *arg, **kwargs):
     Django REST Framework API
     POST /products
     """
-    serializer = ProductSerializer(data=request.data)
+    serializer_context = {
+        'request': request,
+    }
+    serializer = ProductSerializer(
+        data=request.data, context=serializer_context)
     data = serializer.data if serializer.is_valid(raise_exception=True) else {}
     return Response(data)
 

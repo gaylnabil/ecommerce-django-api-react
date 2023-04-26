@@ -22,7 +22,7 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url="api/")),
+    # path('', RedirectView.as_view(url="api/")),
     path('api/', include('api.urls')),
     path('api/v2/', include('ecommerce.routers'))
 ]
