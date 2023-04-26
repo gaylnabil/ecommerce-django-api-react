@@ -54,13 +54,28 @@ class ProductSerializer(serializers.ModelSerializer):
     """
 
     my_discount = serializers.SerializerMethodField(read_only=True)
-
     url = serializers.HyperlinkedIdentityField(
         view_name='product-detail',
         lookup_field='pk'
     )
-
     edit_url = serializers.SerializerMethodField(read_only=True)
+
+    email = serializers.EmailField(write_only=True)
+
+    def create(self, validated_data):
+        email = validated_data.pop('email')
+        obj = super().create(validated_data)
+        print('validated_data Created: ', obj, '; Email: ', email)
+        return obj
+
+    def update(self, instance, validated_data):
+        email = validated_data.pop('email')
+        print('ProductSerializer: validated_data Updated: ',
+              instance, '; Email: ', email)
+        # if instance.description is None:
+        #     instance.description = instance.title
+        #     instance.save()
+        return super().update(instance, validated_data)
 
     def get_edit_url(self, obj):
         request = self.context.get('request')
@@ -85,5 +100,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'my_discount',
             'category',
             'url',
-            'edit_url'
+            'edit_url',
+            'email'
         ]
