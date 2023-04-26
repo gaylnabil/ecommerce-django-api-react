@@ -6,13 +6,16 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 
 # Costume Staff Permissions
-from api.mixins import StaffEditorPermissionMixin
+from api.mixins import AuthenticationMixin, StaffEditorPermissionMixin
 from api.authentication import EcommerceTokenAuthentication
 from .models import Product
 
 from api.authentication import EcommerceTokenAuthentication
 # Using generics API View.
+
+
 class ProductListCreateView(
+    AuthenticationMixin,
     StaffEditorPermissionMixin,
     generics.ListCreateAPIView,
 ):
@@ -23,10 +26,7 @@ class ProductListCreateView(
     queryset = Product.objects.all()
     # The serializer class to use for Product objects.
     serializer_class = ProductSerializer
-    #  used by this view. In this case, it uses SessionAuthentication which requires
-    #  clients to authenticate using Django sessions.
-    authentication_classes = [
-        authentication.SessionAuthentication, EcommerceTokenAuthentication]
+
     def perform_create(self, serializer):
         """
         Overrides the default behavior when creating a new object via POST request. 
@@ -49,6 +49,7 @@ product_list_create_view = ProductListCreateView.as_view()
 
 
 class ProductDetailAPIView(
+    AuthenticationMixin,
     generics.RetrieveAPIView,
     StaffEditorPermissionMixin
 ):
@@ -69,12 +70,14 @@ class ProductDetailAPIView(
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+
     # ProductDetailAPIView means getting only single Product
     # lookup_field= 'pk'
 product_detail_view = ProductDetailAPIView.as_view()
 
 
 class ProductUpdateAPIView(
+    AuthenticationMixin,
     generics.UpdateAPIView,
     StaffEditorPermissionMixin
 ):
@@ -98,6 +101,7 @@ product_update_view = ProductUpdateAPIView.as_view()
 
 
 class ProductDestroyAPIView(
+    AuthenticationMixin,
     generics.DestroyAPIView,
     StaffEditorPermissionMixin
 ):
@@ -110,6 +114,7 @@ class ProductDestroyAPIView(
         authentication.SessionAuthentication,
         EcommerceTokenAuthentication
     ]
+
     def perform_destroy(self, instance):
         print("perform_destroy: ", instance)
         return super().perform_destroy(instance)
