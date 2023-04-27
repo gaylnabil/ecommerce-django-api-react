@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from products.models import Product
+from .validators import validate_title
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -21,13 +22,13 @@ class ProductSerializer(serializers.ModelSerializer):
 
     Methods:
         get_url(obj): Returns a URL string based on an object's primary key.
-        get_my_discount(obj): Calculates and returns a discount value for an 
+        get_my_discount(obj): Calculates and returns a discount value for an
             object if it has an id attribute and is an instance of Product.
 
     Meta:
         model: The Django model to serialize (`Product`).
         fields: The list of fields to include in serialization output,
-            including both built-in fields like 'pk' and custom ones like 
+            including both built-in fields like 'pk' and custom ones like
             'my_discount' or 'url'.
 
     Usage Example:
@@ -53,6 +54,9 @@ class ProductSerializer(serializers.ModelSerializer):
     ```
     """
 
+    # Model fields
+    title = serializers.CharField(validators=[validate_title])
+    # end Model fields
     my_discount = serializers.SerializerMethodField(read_only=True)
     url = serializers.HyperlinkedIdentityField(
         view_name='product-detail',
