@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 
 # Costume Staff Permissions
-from api.mixins import AuthenticationMixin, StaffEditorPermissionMixin
+from api.mixins import AuthenticationMixin, StaffEditorPermissionMixin, UserQuerySetMixin
 from api.authentication import EcommerceTokenAuthentication
 from .models import Product
 
@@ -15,6 +15,7 @@ from api.authentication import EcommerceTokenAuthentication
 
 
 class ProductListCreateView(
+    UserQuerySetMixin,
     AuthenticationMixin,
     StaffEditorPermissionMixin,
     generics.ListCreateAPIView,
@@ -29,8 +30,8 @@ class ProductListCreateView(
 
     def perform_create(self, serializer):
         """
-        Overrides the default behavior when creating a new object via POST request. 
-        It sets the description field of newly created product equal to its title 
+        Overrides the default behavior when creating a new object via POST request.
+        It sets the description field of newly created product equal to its title
         if no description is provided.
 
         """
@@ -41,7 +42,8 @@ class ProductListCreateView(
         if description is None:
             description = title
 
-        serializer.save(description=description)
+        user = self.request.user
+        serializer.save(description=description, user=user)
         return super().perform_create(serializer)
 
 
@@ -49,6 +51,7 @@ product_list_create_view = ProductListCreateView.as_view()
 
 
 class ProductDetailAPIView(
+    UserQuerySetMixin,
     AuthenticationMixin,
     generics.RetrieveAPIView,
     StaffEditorPermissionMixin
@@ -70,13 +73,13 @@ class ProductDetailAPIView(
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-
     # ProductDetailAPIView means getting only single Product
     # lookup_field= 'pk'
 product_detail_view = ProductDetailAPIView.as_view()
 
 
 class ProductUpdateAPIView(
+    UserQuerySetMixin,
     AuthenticationMixin,
     generics.UpdateAPIView,
     StaffEditorPermissionMixin
@@ -101,6 +104,7 @@ product_update_view = ProductUpdateAPIView.as_view()
 
 
 class ProductDestroyAPIView(
+    UserQuerySetMixin,
     AuthenticationMixin,
     generics.DestroyAPIView,
     StaffEditorPermissionMixin

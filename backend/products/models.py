@@ -6,6 +6,12 @@ from django.utils.translation import gettext as _
 
 from products.utils import resize_image, Mode
 
+from django.contrib.auth.models import User
+from django.db import models
+
+# from django.conf import settings
+# User = settings.AUTH_USER_MODEL
+
 # Create Category models.
 
 
@@ -77,7 +83,12 @@ class Product(models.Model):
         blank=True,
         null=True
     )
-
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        default=1
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

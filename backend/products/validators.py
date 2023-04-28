@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from .models import Product
 
 
@@ -21,3 +22,10 @@ def validate_title(value):
             f"Product is already associated with ''{value}''")
 
     return value
+
+
+unique_product_title = UniqueValidator(
+    queryset=Product.objects.all(),
+    lookup='iexact',
+    message="Product must be unique: Product is already associated with",
+)
