@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from products.models import Product
-from .validators import validate_title
+from .validators import validate_title, unique_product_title
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -55,7 +55,7 @@ class ProductSerializer(serializers.ModelSerializer):
     """
 
     # Model fields
-    title = serializers.CharField(validators=[validate_title])
+    title = serializers.CharField(validators=[unique_product_title])
     # end Model fields
     my_discount = serializers.SerializerMethodField(read_only=True)
     url = serializers.HyperlinkedIdentityField(
@@ -105,5 +105,6 @@ class ProductSerializer(serializers.ModelSerializer):
             'category',
             'url',
             'edit_url',
-            'email'
+            'email',
+            # 'user'
         ]

@@ -20,5 +20,5 @@ router.register(
 )
 
 
-print('router.urls: ', router.urls)
+# print('router.urls: ', router.urls)
 urlpatterns = router.urls
