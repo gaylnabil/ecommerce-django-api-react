@@ -97,7 +97,7 @@ DATABASES = {
     }
 }
 
-print("USER: ", os.environ.get('USERNAME'))
+print("POSTGRES_USERNAME: ", os.environ.get('USERNAME'))
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

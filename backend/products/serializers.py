@@ -2,6 +2,20 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 from products.models import Product
 from .validators import validate_title, unique_product_title
+from api.serializers import UserPublicSerializer
+
+
+class ProductInlineSerializer(serializers.Serializer):
+
+    # Model fields adding validators
+    title = serializers.CharField(read_only=True)
+    # end Model fields
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name='product-detail',
+        lookup_field='pk',
+        read_only=True
+    )
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -54,24 +68,36 @@ class ProductSerializer(serializers.ModelSerializer):
     ```
     """
 
-    # Model fields
+    # Model fields adding validators
     title = serializers.CharField(validators=[unique_product_title])
     # end Model fields
+
+    # related to get_my_discount function (custom field)
     my_discount = serializers.SerializerMethodField(read_only=True)
-    url = serializers.HyperlinkedIdentityField(
-        view_name='product-detail',
-        lookup_field='pk'
-    )
+
+    # related to get_edit_url function (custom field)
     edit_url = serializers.SerializerMethodField(read_only=True)
 
-    email = serializers.EmailField(write_only=True)
+    # (custom field)
+    email = serializers.EmailField(source='user.email', write_only=True)
 
+    # custom field: related to User model
+    owner = UserPublicSerializer(source='user',  read_only=True)
+
+    products_related = ProductInlineSerializer(
+        source='user.product_set.all',
+        read_only=True,
+        many=True
+    )
+
+    # override default function 'create'
     def create(self, validated_data):
         email = validated_data.pop('email')
         obj = super().create(validated_data)
         print('validated_data Created: ', obj, '; Email: ', email)
         return obj
 
+    # override default function 'create'
     def update(self, instance, validated_data):
         email = validated_data.pop('email')
         print('ProductSerializer: validated_data Updated: ',
@@ -93,6 +119,13 @@ class ProductSerializer(serializers.ModelSerializer):
             return None
         return obj.get_discount()
 
+    # def get_user_data(self, obj):
+    #     if not hasattr(obj, 'id') or not isinstance(obj, Product):
+    #         return None
+    #     return {
+    #         'username': obj.user.username
+    #     }
+
     class Meta:
         model = Product
         fields = [
@@ -106,5 +139,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'url',
             'edit_url',
             'email',
-            # 'user'
+            'owner',
+            # 'user_data'
+            'products_related',
         ]

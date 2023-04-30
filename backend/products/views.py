@@ -28,6 +28,7 @@ class ProductListCreateView(
     # The serializer class to use for Product objects.
     serializer_class = ProductSerializer
 
+    # override the default 'perform_create' method
     def perform_create(self, serializer):
         """
         Overrides the default behavior when creating a new object via POST request.
@@ -47,6 +48,7 @@ class ProductListCreateView(
         return super().perform_create(serializer)
 
 
+# call the view function to urls.py
 product_list_create_view = ProductListCreateView.as_view()
 
 
@@ -89,8 +91,9 @@ class ProductUpdateAPIView(
     # ProductDetailAPIView means getting only single Product
     lookup_field = 'pk'
 
-    authentication_classes = [authentication.SessionAuthentication]
+    # authentication_classes = [authentication.SessionAuthentication]
 
+    # override the default 'perform_update' method
     def perform_update(self, serializer):
         print("perform_update: ", serializer.validated_data)
         instance = serializer.save()
@@ -114,11 +117,12 @@ class ProductDestroyAPIView(
     # ProductDetailAPIView means getting only single Product
     lookup_field = 'pk'
 
-    authentication_classes = [
-        authentication.SessionAuthentication,
-        EcommerceTokenAuthentication
-    ]
+    # authentication_classes = [
+    #     authentication.SessionAuthentication,
+    #     EcommerceTokenAuthentication
+    # ]
 
+    # override the default 'perform_destroy' method
     def perform_destroy(self, instance):
         print("perform_destroy: ", instance)
         return super().perform_destroy(instance)
