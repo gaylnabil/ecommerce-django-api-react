@@ -5,17 +5,17 @@ from .validators import validate_title, unique_product_title
 from api.serializers import UserPublicSerializer
 
 
-class ProductInlineSerializer(serializers.Serializer):
+# class ProductInlineSerializer(serializers.Serializer):
 
-    # Model fields adding validators
-    title = serializers.CharField(read_only=True)
-    # end Model fields
+#     # Model fields adding validators
+#     title = serializers.CharField(read_only=True)
+#     # end Model fields
 
-    url = serializers.HyperlinkedIdentityField(
-        view_name='product-detail',
-        lookup_field='pk',
-        read_only=True
-    )
+#     url = serializers.HyperlinkedIdentityField(
+#         view_name='product-detail',
+#         lookup_field='pk',
+#         read_only=True
+#     )
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -79,16 +79,16 @@ class ProductSerializer(serializers.ModelSerializer):
     edit_url = serializers.SerializerMethodField(read_only=True)
 
     # (custom field)
-    email = serializers.EmailField(source='user.email', write_only=True)
+    # email = serializers.EmailField(source='user.email', write_only=True)
 
     # custom field: related to User model
-    owner = UserPublicSerializer(source='user',  read_only=True)
+    # owner = UserPublicSerializer(source='user',  read_only=True)
 
-    products_related = ProductInlineSerializer(
-        source='user.product_set.all',
-        read_only=True,
-        many=True
-    )
+    # products_related = ProductInlineSerializer(
+    #     source='user.product_set.all',
+    #     read_only=True,
+    #     many=True
+    # )
 
     # override default function 'create'
     def create(self, validated_data):
@@ -138,8 +138,8 @@ class ProductSerializer(serializers.ModelSerializer):
             'category',
             'url',
             'edit_url',
-            'email',
-            'owner',
+            # 'email',
+            # 'owner',
             # 'user_data'
-            'products_related',
+            # 'products_related',
         ]
