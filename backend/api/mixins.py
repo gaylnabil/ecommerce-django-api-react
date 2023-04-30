@@ -22,7 +22,7 @@ class AuthenticationMixin(object):
     ]
 
 
-class UserQuerySetMixin(object):
+class UserQuerySetMixin():
     """
     A mixin class that filters querysets based on the user field.
 
