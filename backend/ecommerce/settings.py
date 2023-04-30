@@ -157,11 +157,17 @@ if DEBUG:
         'api.authentication.EcommerceTokenAuthentication'
     ]
 
+# DRF = Django Rest Framework
 REST_FRAMEWORK = {
-
+    # Authentication
     'DEFAULT_AUTHENTICATION_CLASSES': auth_classes,
+    # Permissions
     'DEFAULT_PERMISSION_CLASSES': [
         # GET /products : for everyone
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
+    # Pagination
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2,
+
 }
