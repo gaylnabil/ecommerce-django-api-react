@@ -8,6 +8,7 @@ from products.utils import resize_image, Mode
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Q
 
 # from django.conf import settings
 # User = settings.AUTH_USER_MODEL
@@ -42,7 +43,39 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
 
+# Create Product models QuerySet.
+class ProductQuerySet(models.QuerySet):
+    def is_public(self):
+        return self.filter(public=True)
+
+    def search(self, query, user=None):
+        lookup = Q(title__icontains=query) | Q(description__icontains=query)
+        print('USER QUERYSET:', user)
+        return (
+            self.is_public().filter(lookup)
+            if user is None
+            else self.filter(lookup, user=user)
+        )
+        # return (
+        #     qs.filter(lookup)
+        #     if user is None else
+        #     (self.filter(lookup, user=user) |
+        #      qs.filter(lookup, user=user)).distinct()
+        # )
+
+# Create Product models Manager.
+
+
+class ProductManager(models.Manager):
+    def get_queryset(self):
+        return ProductQuerySet(self.model, using=self._db)
+
+    def search(self, query, user=None):
+        return self.get_queryset().search(query, user=user)
+
 # Create Product models.
+
+
 class Product(models.Model):
 
     title = models.CharField(
@@ -89,8 +122,13 @@ class Product(models.Model):
         null=True,
         default=1
     )
+
+    public = models.BooleanField(default=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = ProductManager()
 
     def __str__(self):
         return self.title

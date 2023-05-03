@@ -75,6 +75,7 @@ class ProductDetailAPIView(
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+
     # ProductDetailAPIView means getting only single Product
     # lookup_field= 'pk'
 product_detail_view = ProductDetailAPIView.as_view()
@@ -131,6 +132,25 @@ class ProductDestroyAPIView(
 product_destroy_view = ProductDestroyAPIView.as_view()
 
 
+class SearchProductListAPIView(
+    # UserQuerySetMixin,
+    # AuthenticationMixin,
+    # StaffEditorPermissionMixin,
+    generics.ListAPIView
+):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    # SearchProductListAPIView means getting  search list of Products
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        q = self.request.GET.get('q', '')
+        user = self.request.user if self.request.user.is_authenticated else None
+        return qs.search(query=q, user=user)
+
+
+product_search_view = SearchProductListAPIView.as_view()
+
 # class ProductListAPIView(generics.ListAPIView):
 #     queryset = Product.objects.all()
 #     serializer_class = ProductSerializer
@@ -140,7 +160,7 @@ product_destroy_view = ProductDestroyAPIView.as_view()
 # product_list_view = ProductListAPIView.as_view()
 
 # using @api_view
-@api_view(['GET', 'POST'])
+@ api_view(['GET', 'POST'])
 def product_alt_view(request, pk=None, *args, **kwargs):
     method = request.method  # GET, POST, PUT, DELETE
 

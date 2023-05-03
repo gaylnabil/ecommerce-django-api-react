@@ -138,6 +138,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'category',
             'url',
             'edit_url',
+            'public'
             # 'email',
             # 'owner',
             # 'user_data'
