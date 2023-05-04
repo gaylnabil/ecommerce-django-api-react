@@ -9,6 +9,7 @@ from products.utils import resize_image, Mode
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Q
+from rest_framework.reverse import reverse
 
 # from django.conf import settings
 # User = settings.AUTH_USER_MODEL
@@ -140,6 +141,15 @@ class Product(models.Model):
     def get_discount(self):
         return '10%'
 
+    def is_public(self):
+        return self.public  # return True or False
+
+    def get_absolute_url(self):
+        return reverse("product-detail", kwargs={"pk": self.pk})
+
+    @property
+    def endpoint(self):
+        return self.get_absolute_url()
     # def save(self, *args, **kwargs):
     #     super().save(*args, **kwargs)
     #     print("this is my image :", self.product_image)
