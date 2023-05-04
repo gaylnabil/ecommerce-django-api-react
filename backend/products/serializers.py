@@ -75,6 +75,12 @@ class ProductSerializer(serializers.ModelSerializer):
     # related to get_my_discount function (custom field)
     my_discount = serializers.SerializerMethodField(read_only=True)
 
+    url = serializers.HyperlinkedIdentityField(
+        view_name='product-detail',
+        lookup_field='pk',
+        read_only=True
+    )
+
     # related to get_edit_url function (custom field)
     edit_url = serializers.SerializerMethodField(read_only=True)
 
@@ -138,7 +144,8 @@ class ProductSerializer(serializers.ModelSerializer):
             'category',
             'url',
             'edit_url',
-            'public'
+            'public',
+            'endpoint'
             # 'email',
             # 'owner',
             # 'user_data'
