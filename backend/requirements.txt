@@ -9,12 +9,14 @@ django-dotenv==1.4.2
 django-filter==23.1
 django-imagekit==4.1.0
 djangorestframework==3.14.0
+djangorestframework-simplejwt==5.2.2
 idna==3.4
 Markdown==3.4.3
 pilkit==2.0
 Pillow==9.5.0
 psycopg2-binary==2.9.6
 pycodestyle==2.10.0
+PyJWT==2.6.0
 pytz==2023.3
 PyYAML==6.0
 requests==2.28.2

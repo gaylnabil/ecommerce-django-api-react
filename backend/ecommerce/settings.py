@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import os
 import dotenv
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'api',
     'products',
 ]
@@ -148,13 +150,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 auth_classes = [
-    'rest_framework. authentication.SessionAuthentication'
-    'api.authentication.EcommerceTokenAuthentication'
+    'rest_framework.authentication.SessionAuthentication'
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'api.authentication.EcommerceTokenAuthentication',
 ]
 
 if DEBUG:
     auth_classes = [
-        'api.authentication.EcommerceTokenAuthentication'
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'api.authentication.EcommerceTokenAuthentication',
     ]
 
 # DRF = Django Rest Framework
@@ -170,4 +174,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5,
 
+}
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("JWT",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
 }
