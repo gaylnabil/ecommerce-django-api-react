@@ -6,12 +6,12 @@ services:
     build:
       context: frontend/.
     volumes:
-      - ./frontend:/react_frontend
-    container_name: react_frontend-c
-    image: react_frontend-img
+      - ./frontend:/next_frontend
+    container_name: next_frontend-c
+    image: next_frontend-img
     ports:
       - 3000:3000
-    command: npm start
+    command: npm run dev
     environment:
       - WACTHPACK_POLLING=true
   backend:
