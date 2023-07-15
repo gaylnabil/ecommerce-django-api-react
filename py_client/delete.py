@@ -11,7 +11,7 @@ except Exception:
 if product_id:
     endpoint = ' http://127.0.0.1:8000/api'
 
-    headers = {'authorization': 'Bearer fb9e8a9785d8b808e22f33ffda6d0a97f610737e'}
+    headers = {'authorization': 'Bearer 2ab66083fdfe7c9c950bf588ab1e1df21d2256ba'}
 
     response = requests.delete(
         f'{endpoint}/products/{product_id}/delete/', headers=headers)

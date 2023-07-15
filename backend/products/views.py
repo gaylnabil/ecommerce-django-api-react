@@ -16,7 +16,7 @@ from api.authentication import EcommerceTokenAuthentication
 
 class ProductListCreateView(
     UserQuerySetMixin,
-    # AuthenticationMixin,
+    AuthenticationMixin,
     StaffEditorPermissionMixin,
     generics.ListCreateAPIView,
 ):
@@ -54,7 +54,7 @@ product_list_create_view = ProductListCreateView.as_view()
 
 class ProductDetailAPIView(
     UserQuerySetMixin,
-    # AuthenticationMixin,
+    AuthenticationMixin,
     generics.RetrieveAPIView,
     StaffEditorPermissionMixin
 ):
@@ -83,7 +83,7 @@ product_detail_view = ProductDetailAPIView.as_view()
 
 class ProductUpdateAPIView(
     UserQuerySetMixin,
-    # AuthenticationMixin,
+    AuthenticationMixin,
     generics.UpdateAPIView,
     StaffEditorPermissionMixin
 ):
@@ -109,7 +109,7 @@ product_update_view = ProductUpdateAPIView.as_view()
 
 class ProductDestroyAPIView(
     UserQuerySetMixin,
-    # AuthenticationMixin,
+    AuthenticationMixin,
     generics.DestroyAPIView,
     StaffEditorPermissionMixin
 ):

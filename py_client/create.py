@@ -7,7 +7,7 @@ data = {
     "price": 16.90,
     "category": 2
 }
-headers = {'authorization': 'Bearer fb9e8a9785d8b808e22f33ffda6d0a97f610737e'}
+headers = {'authorization': 'Bearer 2ab66083fdfe7c9c950bf588ab1e1df21d2256ba'}
 
 response = requests.post(f'{endpoint}/products/', json=data, headers=headers)
 # response = requests.get(endpoint)
