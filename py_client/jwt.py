@@ -1,5 +1,3 @@
-# Blog post reference: https://www.codingforentrepreneurs.com/blog/python-jwt-client-django-rest-framework-simplejwt
-
 from dataclasses import dataclass
 import requests
 from getpass import getpass
@@ -16,9 +14,9 @@ class JWTClient:
     access: str = None
     refresh: str = None
     # ensure this matches your simplejwt config
-    header_type: str = "JWT"
+    header_type: str = "Bearer"
     # this assumesy ou have DRF running on localhost:8000
-    base_endpoint = "http://127.0.0.1:8000/api"
+    base_endpoint = "http://localhost:8000/api"
     # this file path is insecure
     cred_path: pathlib.Path = pathlib.Path("creds.json")
 
@@ -98,11 +96,9 @@ class JWTClient:
         password = getpass("What is your password?\n")
         r = requests.post(
             endpoint, json={'username': username, 'password': password})
-
-        # print('r.status_code: ', r.status_code, '\n endpoint: ', endpoint)
         if r.status_code != 200:
             raise Exception(f"Access not granted: {r.text}")
-        print('access granted')
+        print('access granted:', r.status_code)
         self.write_creds(r.json())
 
     def write_creds(self, data: dict):
@@ -176,10 +172,9 @@ class JWTClient:
         """
         headers = self.get_headers()
         if endpoint is None or self.base_endpoint not in str(endpoint):
-            endpoint = f"{self.base_endpoint}/products/?limit={limit}"
-        print("headers: ", headers, "=> base_endpoint: ", endpoint)
+            endpoint = f"{self.base_endpoint}/products/"
+            print('headers:', headers)
         r = requests.get(endpoint, headers=headers)
-        # print('r.status_code: ', r.status_code, '\n', 'r.json(): ', r.json())
         if r.status_code != 200:
             raise Exception(f"Request not complete {r.text}")
         data = r.json()

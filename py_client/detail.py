@@ -8,7 +8,7 @@ endpoint = ' http://127.0.0.1:8000/api'
 #     "price": 79.20
 # }
 id = 2
-headers = {'authorization': 'Bearer 2ab66083fdfe7c9c950bf588ab1e1df21d2256ba'}
+headers = {'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg5NTM0NDIzLCJpYXQiOjE2ODk1MzQzODMsImp0aSI6IjAzNTRlMjI5NmNiMjQ3NWVhNzY2M2RjYjFiMDViNjMwIiwidXNlcl9pZCI6MX0.Ir1bQEzaws3u0QreGlqeNqsA2DSCp5wv0qcydKRqCmU '}
 
 response = requests.get(f'{endpoint}/products/{id}/', headers=headers)
 # response = requests.get(endpoint)

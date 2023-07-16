@@ -55,7 +55,8 @@ class ProductQuerySet(models.QuerySet):
         return (
             self.is_public().filter(lookup)
             if user is None
-            else self.filter(lookup, user=user)
+            # else (self.filter(lookup, user=user) | self.is_public().filter(lookup)).distinct()
+            else self.filter(user=user).filter(lookup)
         )
         # return (
         #     qs.filter(lookup)
@@ -71,8 +72,8 @@ class ProductManager(models.Manager):
     def get_queryset(self):
         return ProductQuerySet(self.model, using=self._db)
 
-    def search(self, query, user=None):
-        return self.get_queryset().search(query, user=user)
+    # def search(self, query, user=None):
+    #     return self.get_queryset().search(query, user=user)
 
 # Create Product models.
 

@@ -14,6 +14,7 @@ def api_home(request, *arg, **kwargs):
     Django REST Framework API
     GET /products
     """
+    print('api home')
     # data = request.data if request.data else {}
     # return Response(data)
     if instance := Product.objects.all().order_by('?').first():

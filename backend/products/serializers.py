@@ -4,7 +4,6 @@ from products.models import Product
 from .validators import validate_title, unique_product_title
 from api.serializers import UserPublicSerializer
 
-
 # class ProductInlineSerializer(serializers.Serializer):
 
 #     # Model fields adding validators
@@ -88,7 +87,8 @@ class ProductSerializer(serializers.ModelSerializer):
     # email = serializers.EmailField(source='user.email', write_only=True)
 
     # custom field: related to User model
-    # owner = UserPublicSerializer(source='user',  read_only=True)
+    # user_data = serializers.SerializerMethodField(read_only=True)
+    owner = UserPublicSerializer(source='user',  read_only=True)
 
     # products_related = ProductInlineSerializer(
     #     source='user.product_set.all',
@@ -145,9 +145,10 @@ class ProductSerializer(serializers.ModelSerializer):
             'url',
             'edit_url',
             'public',
-            'endpoint'
+            'endpoint',
+            # 'user',
             # 'email',
-            # 'owner',
+            'owner',
             # 'user_data'
             # 'products_related',
         ]

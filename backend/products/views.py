@@ -16,7 +16,7 @@ from api.authentication import EcommerceTokenAuthentication
 
 class ProductListCreateView(
     UserQuerySetMixin,
-    AuthenticationMixin,
+    # AuthenticationMixin,
     StaffEditorPermissionMixin,
     generics.ListCreateAPIView,
 ):

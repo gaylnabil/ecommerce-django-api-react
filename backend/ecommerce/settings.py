@@ -149,22 +149,26 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-auth_classes = [
-    'rest_framework.authentication.SessionAuthentication'
-    'rest_framework_simplejwt.authentication.JWTAuthentication',
-    'api.authentication.EcommerceTokenAuthentication',
-]
+# auth_classes = [
+#     'rest_framework.authentication.SessionAuthentication',
+#     'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     'api.authentication.EcommerceTokenAuthentication',
+# ]
 
-if DEBUG:
-    auth_classes = [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'api.authentication.EcommerceTokenAuthentication',
-    ]
+# if DEBUG:
+#     auth_classes = [
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#         # 'api.authentication.EcommerceTokenAuthentication',
+#     ]
 
 # DRF = Django Rest Framework
 REST_FRAMEWORK = {
     # Authentication
-    'DEFAULT_AUTHENTICATION_CLASSES': auth_classes,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'api.authentication.EcommerceTokenAuthentication',
+    ],
     # Permissions
     'DEFAULT_PERMISSION_CLASSES': [
         # GET /products : for everyone
@@ -178,8 +182,13 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    # "AUTH_HEADER_TYPES": ["JWT"],
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=40),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "AUTH_HEADER_TYPES": ("JWT",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
 }
